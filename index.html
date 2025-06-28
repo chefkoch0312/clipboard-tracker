@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clipboard Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>📋 Clipboard Tracker</h1>
+
+      <div class="controls">
+        <button id="readClipboard">+ Inhalt einfügen</button>
+        <button id="clearAll">🗑️ Alles löschen</button>
+      </div>
+
+      <input type="text" id="searchInput" placeholder="🔍 Suchen..." />
+
+      <ul id="clipboardList"></ul>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

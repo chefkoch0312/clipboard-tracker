@@ -1,0 +1,20 @@
+# Betriebssystem-/Editor-Dateien
+.DS_Store
+Thumbs.db
+
+# Logs & temporäre Dateien
+*.log
+
+# VSCode-Settings (optional)
+.vscode/
+
+# Node-Projekte (nur falls später npm init o. ä.)
+node_modules/
+
+# Cache-Dateien (z. B. vom Browser oder Tools)
+.cache/
+dist/
+
+# Lokale Preview-/Temp-Server
+*.tmp
+*.bak
