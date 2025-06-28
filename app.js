@@ -11,6 +11,8 @@ const exportBtn = document.getElementById("exportJson");
 //
 const importInput = document.getElementById("importJson");
 const importTrigger = document.getElementById("importTrigger");
+//
+const toggleThemeBtn = document.getElementById("toggleTheme");
 
 let entries = [];
 
@@ -114,6 +116,28 @@ importInput.addEventListener("change", (event) => {
 
   reader.readAsText(file);
 });
+
+// darkmodoe
+function applyTheme(mode) {
+  document.body.classList.toggle("dark", mode === "dark");
+  toggleThemeBtn.textContent = mode === "dark" ? "☀️" : "🌙";
+  localStorage.setItem("theme", mode);
+}
+
+function loadTheme() {
+  const stored = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const mode = stored || (prefersDark ? "dark" : "light");
+  applyTheme(mode);
+}
+
+toggleThemeBtn.addEventListener("click", () => {
+  const isDark = document.body.classList.contains("dark");
+  applyTheme(isDark ? "light" : "dark");
+});
+
+loadTheme();
+// darkmode
 
 function renderList(filter = "") {
   clipboardList.innerHTML = "";
