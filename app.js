@@ -6,6 +6,11 @@ const searchInput = document.getElementById("searchInput");
 const modal = document.getElementById("modal");
 const modalText = document.getElementById("modalText");
 const closeModal = document.getElementById("closeModal");
+//
+const exportBtn = document.getElementById("exportJson");
+//
+const importInput = document.getElementById("importJson");
+const importTrigger = document.getElementById("importTrigger");
 
 let entries = [];
 
@@ -44,7 +49,71 @@ modal.addEventListener("click", (e) => {
     modal.classList.add("hidden");
   }
 });
-// Modal Container
+
+// export JSON
+exportBtn.addEventListener("click", () => {
+  if (entries.length === 0) {
+    alert("Es gibt nichts zu exportieren.");
+    return;
+  }
+
+  const dataStr = JSON.stringify(entries, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "clipboard_entries.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+});
+
+importTrigger.addEventListener("click", () => {
+  importInput.click();
+});
+
+importInput.addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+
+      if (!Array.isArray(imported)) throw new Error("Keine gültige Liste.");
+      const validEntries = imported.filter(
+        (e) => typeof e.text === "string" && typeof e.timestamp === "number"
+      );
+
+      if (validEntries.length === 0) {
+        alert("Keine gültigen Einträge in der Datei gefunden.");
+        return;
+      }
+
+      // Optional: Vorher löschen? Oder anhängen?
+      if (
+        confirm(
+          "Sollen die bisherigen Einträge überschrieben werden? (Abbrechen = Anhängen)"
+        )
+      ) {
+        entries = validEntries;
+      } else {
+        entries = [...validEntries, ...entries];
+      }
+
+      saveToLocalStorage();
+      renderList(searchInput.value);
+      alert(`${validEntries.length} Einträge erfolgreich importiert.`);
+      importInput.value = ""; // <- Problembehebung
+    } catch (err) {
+      alert("Fehler beim Importieren der Datei:\n" + err.message);
+    }
+  };
+
+  reader.readAsText(file);
+});
 
 function renderList(filter = "") {
   clipboardList.innerHTML = "";

@@ -134,3 +134,17 @@ li button svg {
   font-size: 0.85em;
   padding-right: 2rem; /* genug Abstand zur rechten Ecke */
 }
+
+.controls button {
+  margin-right: 0.5rem;
+}
+
+#exportJson {
+  background-color: #0077cc;
+  color: white;
+}
+
+#importTrigger {
+  background-color: #555;
+  color: white;
+}
