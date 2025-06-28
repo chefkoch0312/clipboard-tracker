@@ -129,6 +129,7 @@ li {
   flex-direction: column;
   gap: 4px;
   border: 1px solid var(--border);
+  min-height: 4.5rem;
 }
 
 /* Zeitstempel */
@@ -140,10 +141,11 @@ li small {
 
 /* Löschen-Button */
 
-li button {
+li > button:last-of-type {
   position: absolute;
   top: 8px;
   right: 8px;
+  z-index: 2;
   background: transparent;
   border: none;
   color: #900;
@@ -155,25 +157,39 @@ li button {
   border-radius: 4px;
 }
 
-li button:hover {
-  background-color: #ffdede;
-}
-
 li button svg {
   pointer-events: none;
   display: block;
 }
 
-/* Mehr-Anzeigen Button */
+/* CopyToClipboard Button */
+.entry-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.25rem;
+  margin-right: 2.5rem; /* Platz für Delete-Button */
+}
 
+.copy-button,
 .more-button {
-  align-self: flex-start;
   background: transparent;
   border: none;
   color: var(--accent);
   cursor: pointer;
   font-size: 0.85em;
-  padding-right: 2rem;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.copy-button .icon,
+.more-button .icon {
+  font-size: 1em;
+  display: inline-block;
 }
 
 /* =============== */

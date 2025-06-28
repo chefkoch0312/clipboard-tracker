@@ -139,6 +139,19 @@ toggleThemeBtn.addEventListener("click", () => {
 loadTheme();
 // darkmode
 
+// CopyToClipboard
+function copyToClipboard(text) {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      console.log("Inhalt kopiert:", text);
+    })
+    .catch((err) => {
+      alert("Kopieren fehlgeschlagen.");
+      console.error(err);
+    });
+}
+
 function renderList(filter = "") {
   clipboardList.innerHTML = "";
 
@@ -147,49 +160,47 @@ function renderList(filter = "") {
     .forEach((entry, index) => {
       const li = document.createElement("li");
 
-      // Gekürzter Inhalt
-      const content = document.createElement("div");
-      content.textContent = truncateText(entry.text);
-
       const value = entry.text;
       const isTruncated = value.length > 45;
+
+      // Gekürzter Inhalt
+      const content = document.createElement("div");
       content.textContent = truncateText(value);
       li.appendChild(content);
 
-      if (isTruncated) {
-        const moreBtn = document.createElement("button");
-        moreBtn.textContent = "Mehr anzeigen";
-        moreBtn.style.alignSelf = "flex-start";
-        moreBtn.style.background = "transparent";
-        moreBtn.style.border = "none";
-        moreBtn.style.color = "#0077cc";
-        moreBtn.style.cursor = "pointer";
-        moreBtn.style.fontSize = "0.85em";
-        moreBtn.classList.add("more-button");
-        moreBtn.onclick = () => showModal(value);
-        li.appendChild(moreBtn);
-      }
-
-      li.appendChild(content);
-
-      // Zeitstempel darunter
+      // Zeitstempel
       const time = document.createElement("small");
       time.textContent = formatTimestamp(entry.timestamp);
-      time.style.display = "block";
-      time.style.color = "#666";
-      time.style.fontSize = "0.8em";
       li.appendChild(time);
 
-      // Löschen-Button
+      // Aktionsleiste (Mehr anzeigen + Kopieren)
+      const actions = document.createElement("div");
+      actions.classList.add("entry-actions");
+
+      if (isTruncated) {
+        const moreBtn = document.createElement("button");
+        moreBtn.innerHTML = `<span class="icon">🔎</span><span>Mehr anzeigen</span>`;
+        moreBtn.classList.add("more-button");
+        moreBtn.onclick = () => showModal(value);
+        actions.appendChild(moreBtn);
+      }
+
+      const copyBtn = document.createElement("button");
+      copyBtn.innerHTML = `<span class="icon">📋</span><span>Kopieren</span>`;
+      copyBtn.classList.add("copy-button");
+      copyBtn.onclick = () => copyToClipboard(value);
+      actions.appendChild(copyBtn);
+
+      li.appendChild(actions);
+
+      // Löschen-Button (oben rechts)
       const delBtn = document.createElement("button");
-      //   delBtn.textContent = "✕";
-      //   delBtn.innerHTML = "&times;";
       delBtn.innerHTML = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-`;
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      `;
       delBtn.onclick = () => {
         entries.splice(index, 1);
         saveToLocalStorage();
