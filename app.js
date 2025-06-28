@@ -2,6 +2,10 @@ const readClipboardBtn = document.getElementById("readClipboard");
 const clearAllBtn = document.getElementById("clearAll");
 const clipboardList = document.getElementById("clipboardList");
 const searchInput = document.getElementById("searchInput");
+//
+const modal = document.getElementById("modal");
+const modalText = document.getElementById("modalText");
+const closeModal = document.getElementById("closeModal");
 
 let entries = [];
 
@@ -25,6 +29,23 @@ function formatTimestamp(ts) {
   return d.toLocaleString(); // oder z. B. .toLocaleString('de-DE')
 }
 
+// Modal Container
+function showModal(text) {
+  modalText.textContent = text;
+  modal.classList.remove("hidden");
+}
+
+closeModal.addEventListener("click", () => {
+  modal.classList.add("hidden");
+});
+
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.classList.add("hidden");
+  }
+});
+// Modal Container
+
 function renderList(filter = "") {
   clipboardList.innerHTML = "";
 
@@ -36,6 +57,26 @@ function renderList(filter = "") {
       // Gekürzter Inhalt
       const content = document.createElement("div");
       content.textContent = truncateText(entry.text);
+
+      const value = entry.text;
+      const isTruncated = value.length > 45;
+      content.textContent = truncateText(value);
+      li.appendChild(content);
+
+      if (isTruncated) {
+        const moreBtn = document.createElement("button");
+        moreBtn.textContent = "Mehr anzeigen";
+        moreBtn.style.alignSelf = "flex-start";
+        moreBtn.style.background = "transparent";
+        moreBtn.style.border = "none";
+        moreBtn.style.color = "#0077cc";
+        moreBtn.style.cursor = "pointer";
+        moreBtn.style.fontSize = "0.85em";
+        moreBtn.classList.add("more-button");
+        moreBtn.onclick = () => showModal(value);
+        li.appendChild(moreBtn);
+      }
+
       li.appendChild(content);
 
       // Zeitstempel darunter
